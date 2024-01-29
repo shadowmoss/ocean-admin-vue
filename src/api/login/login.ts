@@ -6,3 +6,8 @@ export function login(data:any){
         data:data
     });
 }
+export function logout(){
+    return request.post({
+        url:'/user/logout'
+    })
+}

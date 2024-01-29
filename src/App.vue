@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // import HelloWorld from './components/HelloWorld.vue'
+import GlobalConfig from '@/components/globalConfig/index.vue'
 </script>
 
 <template>
@@ -12,8 +13,10 @@
     </a>
   </div>
   <HelloWorld msg="Vite + Vue" /> -->
-  <router-view>
-  </router-view>
+  <GlobalConfig>
+    <router-view>
+    </router-view>
+  </GlobalConfig>
 </template>
 
 <style scoped>
