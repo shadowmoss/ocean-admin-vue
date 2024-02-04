@@ -79,7 +79,7 @@ import { ElRow,ElCol,ElForm,ElFormItem,ElInput,ElButton } from 'element-plus';
 import { LoginStatus } from '@/enums/login';
 import {loginSettingStore} from '@/store/module/login'
 import {computed,reactive,ref} from 'vue';
-import { FormRules } from 'element-plus/lib';
+import { FormRules } from 'element-plus';
 import {register} from '@/api/login/register';
 const registerRef = ref();
 const form = reactive({

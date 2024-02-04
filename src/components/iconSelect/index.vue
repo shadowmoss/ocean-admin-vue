@@ -1,53 +1,95 @@
 <template>
-    <ElInput @click="showIconSelect">
-        <template #append>
-            <ElPopover
-            :visible="visible"
+    <ElSelect
+        v-model="iconName"
+        placeholder="请选择"
+    >
+    <template #header>
+        <ElInput v-model="searchName" >
+            <template #prepend>
+                输入关键字查询:
+            </template>
+        </ElInput>
+    </template>
+    <ElOption
+        v-for="item in elementPlusIcons"
+        :key="item"
+        :label="item"
+        :value="item"
+    >
+        <div
+            class="flex item-center"
+        >
+            <Icon class="mr-5" :iconName="item" :width="IconWidth" />
+            <span>{{ item }}</span>
+        </div>
+    </ElOption>
+    <template #tag>
+        <!-- <Icon v-for="name in elementPlusIcons" :key="name" :iconName="name" :width="IconWidth"/> -->
+    </template>
+    </ElSelect>    
+            <!-- <ElPopover
+            trigger="click"
             :width="350"
             :popper-options="{
                 placement:'right-start'
-            }"
-            >
-            <template #reference>
-                <p>icon</p>
-            </template>
-            <ElInput v-model="iconName" placeholder="搜索图标"/>
-            <ElDivider border-style="dashed"/>
-            <ElScrollbar :height="450">
-            <ul 
+            }" 
+            > -->
+            <!-- <template #reference>
+                <p class="cursor-pointer">icon</p>
+            </template> -->
+            <!-- <ElDivider border-style="dashed"/> -->
+            <!-- <ElScrollbar :height="450"> -->
+            <!-- <ul 
                 class="flex flex-wrap"
             >
                 <li
-                    class="border-2 border-inherit mx-1 my-1 cursor-pointer"
+                    class="icon-item border-2 border-inherit mx-1 my-1 cursor-pointer"
                     v-for="item in elementPlusIcons"
                     :key="item"
                     @click="chooseIcon(item)"
-                >
-                    <Icon :iconName="item" :width="IconWidth"></Icon>
-                </li>
-            </ul>
-            </ElScrollbar>
-            </ElPopover>
-        </template>
-    </ElInput>
+                > -->
+                <!-- </li>
+            </ul> -->
+            <!-- </ElScrollbar> -->
+            <!-- </ElPopover> -->
+    <!-- </ElInput> -->
 </template>
 <script lang="ts" setup>
 import Icon from "@/components/icon/Icon.vue"
-import {ElInput,ElPopover,ElDivider,ElScrollbar} from 'element-plus';
-import {ref} from 'vue';
-import {IconList} from '@/components/iconSelect/data'; 
-const visible  = ref(false);
-const elementPlusIcons = ref(IconList["element-plus"]);
-const IconWidth = ref(25);
-function showIconSelect(){
-    visible.value = !visible.value;
-}
-function chooseIcon(item:String){
-    console.log(item);
-    iconName.value = item;
-}
-console.log(elementPlusIcons)
+import {ElInput,ElSelect,ElOption} from 'element-plus';
+import {computed, ref} from 'vue';
+import {IconList} from '@/components/iconSelect/data';
 const iconName = ref('');
+const searchName = ref('');
+// const visible  = ref(false);
+const elementPlusIcons = computed(()=>{
+    return IconList["element-plus"]?.filter((v)=>v.includes(searchName.value));
+})
+const IconWidth = ref(20);
+const emits =  defineEmits({
+    "choose":(iconName)=>{
+        if(iconName){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+});
+// function showIconSelect(){
+//     visible.value = !visible.value;
+// }
+// function chooseIcon(item:String){
+//     iconName.value = item;
+//     emits("choose",item);
+//     showIconSelect();
+// }
 </script>
 <style lang="scss">
+.icon-item:hover{
+    color:var(--el-color-primary);
+    border-color:var(--el-color-primary);
+    transform: scaleX(1.05);
+    transition: all 0.4s;
+}
 </style>

@@ -56,7 +56,7 @@
             >
                 <ElFormItem label="菜单图标" prop="icon">
                     <!-- <ElInput v-model="form.icon" /> -->
-                    <IconSelect />
+                    <IconSelect v-model="form.icon" @choose="(value)=>form.icon = value"/>
                 </ElFormItem>
             </ElCol>
         </ElRow>
@@ -232,7 +232,7 @@
     </Dialog>
 </template>
 <script lang="ts" setup>
-import IconSelect from '@/components/iconselect/index.vue';
+import IconSelect from '@/components/iconSelect/index.vue';
 import {getMenuOne,listMenu,createMenu,updateMenu} from '@/api/system/menu/index'
 import {ElForm,FormRules,ElButton,ElFormItem,ElTreeSelect,ElInputNumber,ElInput,ElRadioGroup,ElRadio,ElRadioButton,ElRow,ElCol} from "element-plus";
 import Dialog from "@/components/dialog/index.vue"
@@ -422,7 +422,7 @@ function generateSelectTree(tree:MenuOriginType,treeNode:Map<number,MenuSelectTy
     }
     if(treeNode.has(tree.parentId)){
         const parent = treeNode.get(tree.parentId);
-        parent.children.push(node);
+        parent?.children.push(node);
     }
     if(tree.children!=null){
         for(const item of tree.children){
