@@ -55,7 +55,8 @@
                 :span="24"
             >
                 <ElFormItem label="菜单图标" prop="icon">
-                    <ElInput v-model="form.icon" />
+                    <!-- <ElInput v-model="form.icon" /> -->
+                    <IconSelect />
                 </ElFormItem>
             </ElCol>
         </ElRow>
@@ -231,6 +232,7 @@
     </Dialog>
 </template>
 <script lang="ts" setup>
+import IconSelect from '@/components/iconselect/index.vue';
 import {getMenuOne,listMenu,createMenu,updateMenu} from '@/api/system/menu/index'
 import {ElForm,FormRules,ElButton,ElFormItem,ElTreeSelect,ElInputNumber,ElInput,ElRadioGroup,ElRadio,ElRadioButton,ElRow,ElCol} from "element-plus";
 import Dialog from "@/components/dialog/index.vue"

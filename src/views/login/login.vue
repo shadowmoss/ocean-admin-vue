@@ -1,10 +1,16 @@
 <template>
-    <div class="login-container">
+    <div class="login-container" >
         <div class="login-left">
             <img :src="login_picture"/>
         </div>
-        <div class="login-card">
-            <div class="login-header">
+        <div 
+            class="right"
+        >   
+            <div
+                class="login-card"
+                v-show="getShow"
+            >
+                <div class="login-header">
                 <h2 class="font-sans text-2xl/[1.5]">登录</h2>
             </div>
             <el-form
@@ -38,38 +44,51 @@
                         <el-button
                             size="large"
                             style="width:100%"
+                            @click="registerAction"
                         >
                             注册
                         </el-button>
                     </div>
                 </div>
             </div>
+            <Register />
+        </div>
+        
     </div>
 </template>
 <script setup lang="ts">
 import { ElForm,ElFormItem,ElInput,ElButton} from 'element-plus';
 import login_left from '/login-left.png';
-import { ref,reactive } from 'vue';
+import { ref,reactive, computed } from 'vue';
 import {login} from '@/api/login/login';
 import { useRouter } from 'vue-router';
-// import {setLocalStorage,TokenEnum} from '@/utils/localstorage';
 import {setSessionStorage,TokenEnum} from '@/utils/sessionStorage';
+import {loginSettingStore} from '@/store/module/login';
+import {LoginStatus} from '@/enums/login';
+import Register from '@/views/register/register.vue';
 const router = useRouter();
 const login_picture = ref(login_left);
 const form:any = reactive({
     username:'',
     password:'',
 });
+const loginStore = loginSettingStore();
 async function loginAction(){
     login(form).then(data=>{
        if(data.success){
-        // setLocalStorage(TokenEnum.accessToken,data.data.accessToken);
         setSessionStorage(TokenEnum.accessToken,data.data.accessToken);
         setSessionStorage(TokenEnum.refreshToken,data.data.refreshToken);
+        loginStore.setLoginState();
         router.push({name:"home"});
        }
     });
 }
+function registerAction(){
+    loginStore.setRegisterState();
+}
+const getShow= computed(()=>{
+    return loginStore.getLoginState === LoginStatus.LOGIN;
+})
 </script>
 <style lang="scss">
 .login-container{
@@ -84,23 +103,26 @@ async function loginAction(){
             height: 100%;
         }
     }
-    .login-card{
+    .right{
         flex: 1 1 50%;
-        display: flex;
-        flex-direction: column;
-        padding: 0 3%;
-        margin:0 2%;
-        .login-header{
-            align-self: center;
-        }
-        .action-group{
+        .login-card{
             display: flex;
             flex-direction: column;
-            align-items: stretch;
-            .action-item{
-                margin-bottom: 4%;
+            padding: 0 3%;
+            margin:0 2%;
+            .login-header{
+                align-self: center;
+            }
+            .action-group{
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                .action-item{
+                    margin-bottom: 4%;
+                }
             }
         }
     }
+    
 }
 </style>
