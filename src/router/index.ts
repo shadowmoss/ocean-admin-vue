@@ -12,6 +12,7 @@ const routerOptions:RouterOptions = {
 const router =  createRouter(
     routerOptions
 );
+// TODO 刷新访问令牌的逻辑尚未完成。
 async function initRouter(router:Router){
     if(getAccessToken()){
         const userPermission = usePermissionStoreWithPinia();
@@ -21,6 +22,7 @@ async function initRouter(router:Router){
                 await userStore.getUserState();
             // 获取当前用户的可用菜单。
                 await userPermission.generateRoute();
+            // 将获取到的可用菜单添加到路由列表中。
                 userPermission.getAddtionalRoute.forEach(item=>{
                     router.addRoute(item);
                 });
@@ -28,6 +30,7 @@ async function initRouter(router:Router){
     }
 }
 export async function setupRouter (app:App<Element>){
+    // 解决刷新页面之后，路由丢失的问题，刷新窗口之后,整个Vue对象重新生成。
     await initRouter(router);
     app.use(router);
 }

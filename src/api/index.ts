@@ -1,8 +1,7 @@
-import axios,{CreateAxiosDefaults,AxiosInstance,AxiosRequestConfig, InternalAxiosRequestConfig, AxiosError} from 'axios';
-import {getAccessToken,geRefreshToken,clearStorage, setSessionStorage,TokenEnum} from '@/utils/sessionStorage'
-import {ElMessage} from "element-plus"
+import axios,{CreateAxiosDefaults,AxiosInstance,AxiosRequestConfig, InternalAxiosRequestConfig,AxiosResponse,AxiosError} from 'axios';
+import {getAccessToken,getRefreshToken,clearStorage, setSessionStorage,TokenEnum} from '@/utils/sessionStorage'
+import {ElMessage, ElMessageBox} from "element-plus"
 import {useUserStoreWithPinia} from "@/store/module/user"
-import { rejects } from 'assert';
 
 // axios对象默认基本配置
 const defaultConfig:CreateAxiosDefaults = {
@@ -13,6 +12,8 @@ const defaultConfig:CreateAxiosDefaults = {
 
 // 创建一个请求列表,当访问令牌过期时,使用刷新令牌刷新访问之后,重放请求
 let requestList:any[] = [];
+// 当前是否正在执行刷新令牌的操作。
+let isRefresh = false;
 
 const whitelist = ["/user/login","/oauth2/token/get"]
 // 创建请求实例对象
@@ -33,62 +34,50 @@ requestInstance.interceptors.request.use((config:InternalAxiosRequestConfig)=>{
     }
     return config;
 },(error: AxiosError) => {
-    // Do something with request error
-    console.log(error) // for debug
     Promise.reject(error)
   });
 
 // 配置响应拦截器
-requestInstance.interceptors.response.use((response)=>{
-    console.log("当前响应的内容");
+requestInstance.interceptors.response.use(async (response:AxiosResponse<any>)=>{
+    console.log("响应处理");
     console.log(response);
-    return response;
-},async (error:AxiosError)=>{
-    // console.log(error);
-    let isRefresh = false;
-    let msg = null;
-    if(!error.response||!error.response.data||!error.response.data.code){
-        return Promise.reject(error);
+    const resultCode = response.data.code;
+    const config = response.config;
+    if(resultCode==6000006 || resultCode == 6000007){
+        reLoginMessageBox();
     }
-    const {data} = error.response;
-    const code = data.code;
-    msg = data.message;
-    const config = error.config;
-    if(code!=6000003 && code != 6000004){
-        return Promise.reject(error);
+    if(resultCode!=6000003 && resultCode != 6000004){
+        return Promise.resolve(response);
     }
-        // 表示当前未进行令牌刷新
-        if(!isRefresh){
-            // 如果当前正在执行令牌刷新
-            // 将请求保存起来
-            config.headers["authentication_token"] = getAccessToken();
-            requestList.push(()=>{
-                requestInstance(config);
+    // 当前正在执行刷新时,将请求放置到请求队列中
+    if(isRefresh){
+        return new Promise((resolve)=>{
+            requestList.push((accessToken:string)=>{
+                config.headers["authentication_token"] = accessToken;
+                resolve(requestInstance(config));
             })
-            // return Promise.reject(error);
-        }
+        })
+    }
+    // 还并未进行刷新令牌操作,说明刷新令牌可能过期了
+    if(!isRefresh){
+        // 执行刷新令牌的操作
         isRefresh = true;
-        // 如果获取不到刷新令牌则执行重新登录
-        if(!geRefreshToken()){
-            const userStore = useUserStoreWithPinia();
-            // 重设用户信息
-            userStore.$reset();
-            // 将SessionStorage中的内容清空
-            clearStorage();
-            // 再次执行一遍路由，走一遍router.beforeEach()
-            window.location.href = window.location.href
-        }
-        // 进行刷新令牌的请求
         try{
-            const token = await refreshToken(geRefreshToken())
+            const token = await refreshToken(getRefreshToken());
             setSessionStorage(TokenEnum.accessToken,token.data.data.accessToken);
             setSessionStorage(TokenEnum.refreshToken,token.data.data.refreshToken);
-            // 刷新成功重放请求列表
-            requestList.forEach(async (item)=>{
-                await item();
-            })
+            // 令牌刷新完成
+            const newAccessToken = getAccessToken();
             config.headers["authentication_token"] = getAccessToken();
+            // 执行请求队列回放
+            requestList.forEach((item:any)=>{
+                item(newAccessToken);
+            })
+            // 回放本请求
+            return requestInstance(config);
         }catch(e){
+            console.log("刷新令牌获取出现异常");
+            // 如果刷新令牌报异常。
             const userStore = useUserStoreWithPinia();
             // 重设用户信息
             userStore.$reset();
@@ -100,10 +89,11 @@ requestInstance.interceptors.response.use((response)=>{
             requestList = [];
             isRefresh = false;
         }
-        ElMessage({
-            message:msg,
-            type:"error"
-        })
+    }
+    return response;
+},async (error:AxiosError)=>{
+    console.log("响应异常处理");
+    console.log(error);
     return Promise.reject(error);
 })
 async function refreshToken(refreshToken:string){
@@ -119,6 +109,25 @@ async function refreshToken(refreshToken:string){
             secret:"default"
         }
     });
+}
+function reLoginMessageBox(){
+    ElMessageBox.alert(
+        "当前用户访问令牌已过期，请重新登录！",
+        "提示!",
+        {
+            confirmButtonText:'确定',
+            callback:()=>{
+            // 如果刷新令牌报异常。
+            const userStore = useUserStoreWithPinia();
+            // 重设用户信息
+            userStore.$reset();
+            // 将SessionStorage中的内容清空
+            clearStorage();
+            // 再次执行一遍路由，走一遍router.beforeEach()
+            window.location.href = window.location.href
+            }
+        }
+    )
 }
   // 常用的get、post、put、delete HTTP方法
 export default{

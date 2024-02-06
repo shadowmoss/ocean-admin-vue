@@ -76,6 +76,7 @@ const loginStore = loginSettingStore();
 async function loginAction(){
     login(form).then(data=>{
        if(data.success){
+        // 执行登录设置访问令牌到Session窗口
         setSessionStorage(TokenEnum.accessToken,data.data.accessToken);
         setSessionStorage(TokenEnum.refreshToken,data.data.refreshToken);
         loginStore.setLoginState();

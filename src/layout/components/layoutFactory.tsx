@@ -11,6 +11,7 @@ export const layoutFactory = () => {
                 routes = state.originalRoutes;
             })
     const classicLayout = ()=>{
+        console.log(routes);
         return (
         <>
             <div class={'page-left grow basis-[15%] bg-[#545c64]'}>

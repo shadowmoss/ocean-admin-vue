@@ -42,13 +42,10 @@ export const useUserStore = defineStore('userStore',{
                 this.resetState();
                 return null;
             }
-            // let userState =  getLocalStorage(userStateLocalStorage);
             let userState =  getSessionStorage(userStateLocalStorage);
             if(!userState){
                 const data =  await getAuthenticatiedInfo();
                 userState = data.data
-                // setLocalStorage(userStateLocalStorage,userState);
-                console.log(userState);
                 setSessionStorage(userStateLocalStorage,userState);
             }
             this.user_permissions = userState.userPermissions;

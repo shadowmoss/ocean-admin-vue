@@ -24,7 +24,7 @@ export function deleteSessionStorage(key:string){
     sessionStorage.delete(key);
 }
 // 获取刷新令牌
-export function geRefreshToken(){
+export function getRefreshToken(){
     return sessionStorage.get(TokenEnum.refreshToken);
 }
 

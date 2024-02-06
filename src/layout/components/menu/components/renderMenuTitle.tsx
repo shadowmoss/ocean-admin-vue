@@ -1,10 +1,12 @@
-import {ElIcon} from "element-plus"
+import Icon from "@/components/icon/Icon.vue";
 export const renderMenuTitle = (name:string|unknown,icon:string|unknown)=>{
     return (
         <>
-            {/* <ElIcon> */}
-
-            {/* </ElIcon> */}
+            <Icon
+                class="mr-2"
+                iconName={String(icon)} 
+                width={Number(20)} 
+            />
             <span>
                 {name}
             </span>

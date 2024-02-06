@@ -33,5 +33,5 @@ export const renderMenuItem = (routes:RouteRecordRaw[],parentPath="/")=>{
                             </>
                         )
                     }
-                })
+                });
 }

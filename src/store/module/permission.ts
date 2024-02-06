@@ -31,17 +31,9 @@ export const usePermissionStore = defineStore("permission",{
         async generateRoute(){
             return new Promise<void>(async(resolve)=>{
             let authorityMenu:AuthorityMenu[] = [];
-            // if(getLocalStorage(userPermissionRoute)){
-            //     authorityMenu = getLocalStorage(userPermissionRoute);
-            // }
             if(getSessionStorage(userPermissionRoute)){
                 authorityMenu = getSessionStorage(userPermissionRoute);
             }
-            // else{
-            //     const data = await getAuthorityMenu();
-            //     setLocalStorage(userPermissionRoute,data.data);
-            //     authorityMenu = data.data;
-            // }
             else{
                 const data = await getAuthorityMenu();
                 setSessionStorage(userPermissionRoute,data.data);
