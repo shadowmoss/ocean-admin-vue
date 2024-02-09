@@ -7,8 +7,6 @@ export function checkPerm(value:Array<string>){
        const result = value.some(permission =>{
         return userState.userPermissions.includes(all_permission) || all_permission === permission || userState.userPermissions.includes(permission);
        })
-       console.log("打印权限检查结果")
-       console.log(result);
        return !!result;
     }else{
         return false;

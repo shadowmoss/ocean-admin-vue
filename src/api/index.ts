@@ -39,8 +39,8 @@ requestInstance.interceptors.request.use((config:InternalAxiosRequestConfig)=>{
 
 // 配置响应拦截器
 requestInstance.interceptors.response.use(async (response:AxiosResponse<any>)=>{
-    console.log("响应处理");
-    console.log(response);
+    // console.log("响应处理");
+    // console.log(response);
     const resultCode = response.data.code;
     const config = response.config;
     if(resultCode==6000006 || resultCode == 6000007){

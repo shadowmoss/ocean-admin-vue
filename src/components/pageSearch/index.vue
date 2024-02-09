@@ -61,14 +61,14 @@ import {computed, ref,unref,onMounted} from "vue";
 onMounted(()=>{
     if(props.hasAddPerm!=undefined){
         hasAdd.value = props.hasAddPerm;
-        console.log("打印是否拥有新增权限")
-        console.log(hasAdd.value);
+        // console.log("打印是否拥有新增权限")
+        // console.log(hasAdd.value);
     }
     if(props.hasQueryPerm!=undefined){
         
         hasQuery.value = props.hasQueryPerm;
-        console.log("打印是否拥有查询权限")
-        console.log(hasQuery.value)
+        // console.log("打印是否拥有查询权限")
+        // console.log(hasQuery.value)
     }
 })
 const hasAdd = ref(true);

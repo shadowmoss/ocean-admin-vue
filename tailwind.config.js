@@ -5,7 +5,14 @@ export default {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      minWidth:{
+        leftmenu: '23px',
+      },
+      maxWidth:{
+        leftmenu: '288px',
+      }
+    },
   },
   plugins: [],
 }
