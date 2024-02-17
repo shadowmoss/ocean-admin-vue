@@ -43,9 +43,11 @@ requestInstance.interceptors.response.use(async (response:AxiosResponse<any>)=>{
     // console.log(response);
     const resultCode = response.data.code;
     const config = response.config;
+    // 刷新令牌过期
     if(resultCode==6000006 || resultCode == 6000007){
         reLoginMessageBox();
     }
+    // 访问令牌过期
     if(resultCode!=6000003 && resultCode != 6000004){
         return Promise.resolve(response);
     }

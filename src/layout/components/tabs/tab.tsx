@@ -7,7 +7,7 @@ import {filterTagsRoute} from "@/utils/routeUtils";
 import Icon from "@/components/icon/Icon.vue";
 const permissionStore = usePermissionStore();
 
-const routes = computed(()=>permissionStore.getAddtionalRoute);
+const routes = computed(()=>permissionStore.getRoutes);
 
 const tagsViewStore = useTagsViewStore();
 
@@ -60,8 +60,10 @@ function readnerTags(){
     )
     });
 }
+// 查找固定存在的那个标签
 function init(){
     const filterResult = filterTagsRoute(unref(routes));
+    console.log(filterResult);
     for(const item of filterResult){
         tagsViewStore.addVisitedViews(item);
     }

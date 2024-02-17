@@ -80,7 +80,8 @@ export function filterTagsRoute(routes:any[]):any[]{
             const tempResult =  filterTagsRoute(item["children"]);
             result = [...result,...tempResult];
         }
-        if(meta.type === MenuTypes.MENU_PAGE){
+        // 寻找那个在路由中被配置为固定出现的页面
+        if(meta.type === MenuTypes.MENU_PAGE&& meta.affix){
             result.push(item);
         }
     })
