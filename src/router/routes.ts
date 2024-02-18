@@ -1,4 +1,5 @@
 import {RouteRecordRaw} from 'vue-router'
+import { MenuTypes } from '@/enums/menu';
 /**
  * meta:{
  * 
@@ -12,6 +13,9 @@ const routes:RouteRecordRaw[] = [
         name:"home",
         component:()=>import("@/layout/layout.vue"),
         meta:{
+            icon:"House",
+            type:MenuTypes.MENU_PAGE,
+            title:"首页",
             affix:true,
         }
     },

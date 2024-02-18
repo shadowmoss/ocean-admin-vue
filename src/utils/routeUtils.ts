@@ -19,7 +19,10 @@ export const routeGenerate = (authorityMenus:AuthorityMenu[])=>{
         let data:RouteRecordRaw ={
             path:menu.path,
             name:menu.componentName,
-            meta:meta
+            meta:meta,
+            redirect:"",
+            component:{},
+            children:[]
         }
         // 当前数据为目录
         if(menu.type===MenuTypes.MENU_DIRECTORY){

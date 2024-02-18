@@ -37,9 +37,9 @@ export const layoutFactory = () => {
                     <TabsView ></TabsView>
                 </div>
                 <Content class={'grow basis-[90%] '}/>
-                <div class={'page-footer grow basis-[10%] bg-red-700'}>
+                {/* <div class={'page-footer grow basis-[10%] bg-red-700'}>
                     <h2>页脚</h2>
-                </div>
+                </div> */}
             </div>
         </>
         )
