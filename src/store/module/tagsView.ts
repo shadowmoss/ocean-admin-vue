@@ -26,8 +26,6 @@ export const useTagsViewStore = defineStore("tagsViewStore",{
         },
         deleteVisitedViews(route:RouteLocationNormalizedLoaded){
             for(const [index,item] of this.visitedViews.entries()){
-                console.log(item);
-                
                 if(item.fullPath === route.fullPath){
                     if(item.meta.affix){
                         console.log("执行了")

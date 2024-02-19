@@ -29,7 +29,7 @@ requestInstance.interceptors.request.use((config:InternalAxiosRequestConfig)=>{
         }
     })
     // 如果当前请求需要携带访问令牌则加上
-    if(getAccessToken() && isToken){
+    if(isToken && getAccessToken()){
         config.headers["authentication_token"]=getAccessToken();
     }
     return config;

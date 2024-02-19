@@ -1,7 +1,6 @@
 import {defineStore} from 'pinia'
 import {store} from '@/store/index'
 import { RouteRecordRaw } from 'vue-router'
-// import {userPermissionRoute,setLocalStorage,getLocalStorage} from "@/utils/localstorage"
 import {setSessionStorage,getSessionStorage,userPermissionRoute} from '@/utils/sessionStorage';
 import {getAuthorityMenu} from '@/api/system/authority/index'
 import {routeGenerate} from '@/utils/routeUtils';
