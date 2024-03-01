@@ -50,7 +50,6 @@
             <ElButton class="mr-5"  :icon="RefreshRight" @click="resetHandler">重置</ElButton>
             <ElButton type="primary" v-if="hasAdd" :icon="Plus" @click="addPlus">新增</ElButton>
         </div>
-        
 </template>
 <script lang="ts" setup>
 
@@ -59,6 +58,8 @@ import {Search,RefreshRight,Plus} from '@element-plus/icons-vue';
 import {SearchProperty} from '@/types/searchProperty';
 import {computed, ref,unref,onMounted} from "vue";
 onMounted(()=>{
+    console.log(props.hasAddPerm);
+    console.log(props.searchItem)
     if(props.hasAddPerm!=undefined){
         hasAdd.value = props.hasAddPerm;
         // console.log("打印是否拥有新增权限")
